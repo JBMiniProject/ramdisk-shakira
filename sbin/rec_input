@@ -1,0 +1,8 @@
+#!/sbin/sh
+# Script for capturing input for booting into recovery
+# Author: nobodyAtall @ xda
+exec /sbin/nice -n -20 /sbin/bootlogo &
+cat /dev/input/event2 > /dev/keycheck&
+echo $! > /dev/keycheck.pid
+#sleep 3
+
