@@ -22,6 +22,7 @@ recovery() {
 	cp /recovery.fstab /etc/recovery.fstab
 	mount /dev/block/mmcblk0p1 /sdcard
 	rm -rf /tmp/*
+	cp /sbin/aromafm /tmp/aromafm.zip
 	pkill bootlogo
 	/sbin/recovery &
 	/sbin/adbd recovery 
