@@ -32,6 +32,7 @@ on post-fs-data
     mkdir /cache/download 0771 system cache
 
 on boot
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
     #radio fix
     mkdir /data/radio 0775 radio radio
     mkdir /data/radio/log 0775 radio radio
@@ -125,6 +126,11 @@ service hw_config /system/xbin/nice -n -20 /system/bin/sh /system/etc/hw_config.
     user root
     oneshot
 
+service post_hw_config /system/bin/sh /post_hw_config.sh
+    class main
+    user root
+    oneshot
+
 service wlan_loader /system/bin/wlan_loader -i /etc/wifi/tiwlan.ini -f /etc/wifi/tiwlan_firmware.bin -e /data/etc/wifi/fw
     disabled
     oneshot
@@ -140,7 +146,7 @@ service hostapd /system/bin/hostap /data/misc/wifi/hostapd.conf
     disabled
     oneshot
 
-service dhcpcd_tiwlan0 /system/bin/dhcpcd -ABKL tiwlan0
+service dhcpcd_tiwlan0 /system/bin/dhcpcd -ABKL
     class main
     disabled
     oneshot
@@ -201,3 +207,10 @@ service compcache /system/bin/handle_compcache
     user root
     group root
     oneshot
+
+# Bugreport (Holding down: volume down + volume up + power)
+service bugreport /system/bin/bugmailer.sh -v
+    class main
+    disabled
+    oneshot
+    keycodes 114 115 107
