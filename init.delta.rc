@@ -31,6 +31,10 @@ on post-fs-data
     mkdir /data/local/download 0771 system cache
     mkdir /cache/download 0771 system cache
 
+on fs
+    # We don't support encryption on yaffs
+    setprop ro.crypto.state
+
 on boot
     mount debugfs /sys/kernel/debug /sys/kernel/debug
     #radio fix
