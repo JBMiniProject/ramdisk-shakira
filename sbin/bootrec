@@ -1,13 +1,13 @@
 #!/sbin/sh
 # Script for booting into recovery
-# Author: nobodyAtall @ xda
 
-recovery() {
-	# fixing CPU clocks to avoid issues in recovery
-	echo performance > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+cpu_clock() {
+	echo "smartassV2" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 	echo 600000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 	echo 122880 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-	rm /cache/recovery/boot
+}
+
+recovery_cmds() {
 	mount -o remount,rw rootfs /
 	umount -l /system
 	umount -l /data
@@ -22,10 +22,19 @@ recovery() {
 	cp /recovery.fstab /etc/recovery.fstab
 	mount /dev/block/mmcblk0p1 /sdcard
 	rm -rf /tmp/*
-	cp /sbin/aromafm /tmp/aromafm.zip
+#	cp /sbin/aromafm /tmp/aromafm.zip
 	pkill bootlogo
+}
+
+recovery() {
+	rm /cache/recovery/boot
 	/sbin/recovery &
 	/sbin/adbd recovery 
+}
+
+twrp_recovery() {
+	pkill bootlogo
+	chroot /recovery /init
 }
 
 copy_modules() {
@@ -35,7 +44,7 @@ copy_modules() {
 		MD5SUM2=`md5sum /system/lib/modules/$x | awk {'print $1'}`
 		if [ "$MD5SUM1" != "$MD5SUM2" ]
 		then
-			cp /modules/$x /system/lib/modules/$x
+			ln -s -f /modules/$x /system/lib/modules/$x
 		fi
 	done
 }
@@ -48,20 +57,24 @@ cleanup() {
 	mount -o remount,ro /
 }
 
-if [ -e /cache/recovery/boot ]
-then
-	recovery
-else
-	sleep 1
-	kill -9 $(cat /dev/keycheck.pid)
-	if [ -s /dev/keycheck ]
+sleep 2
+kill -9 $!
+if [ -s /dev/keycheck -o -e /cache/recovery/boot ]
 	then
+		cpu_clock
+		recovery_cmds
 		recovery
-	else
-		mount -o remount,rw /system
-		mkdir -p /system/lib/modules/
-		copy_modules
-		mount -o remount,ro /system
-		cleanup
-	fi
 fi
+
+if [ -s /dev/tscheck ]
+	then
+		cpu_clock
+		recovery_cmds
+		twrp_recovery
+fi
+
+mount -o remount,rw /system
+mkdir -p /system/lib/modules/
+copy_modules
+mount -o remount,ro /system
+cleanup
