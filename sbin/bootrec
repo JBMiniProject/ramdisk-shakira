@@ -44,7 +44,7 @@ copy_modules() {
 		MD5SUM2=`md5sum /system/lib/modules/$x | awk {'print $1'}`
 		if [ "$MD5SUM1" != "$MD5SUM2" ]
 		then
-			ln -s -f /modules/$x /system/lib/modules/$x
+			cp /modules/$x /system/lib/modules/$x
 		fi
 	done
 }
