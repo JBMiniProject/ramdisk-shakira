@@ -12,7 +12,7 @@ on post-fs
     exec /sbin/charger
 
 on early-init
-    export DOWNLOAD_CACHE /cache/download
+    export DOWNLOAD_CACHE /data/local/download
     export EXTERNAL_STORAGE /mnt/sdcard
     mkdir /mnt/sdcard 0000 system system
     # for backwards compatibility
@@ -33,7 +33,7 @@ on post-fs-data
 
 on fs
     # We don't support encryption on yaffs
-    setprop ro.crypto.state
+    setprop ro.crypto.state unsupported
 
 on boot
     mount debugfs /sys/kernel/debug /sys/kernel/debug
