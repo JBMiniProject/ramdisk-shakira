@@ -1,0 +1,15 @@
+on boot
+
+# Start compcache
+service compcache /system/bin/handle_compcache
+    class main
+    user root
+    group root
+    oneshot
+
+# Bugreport (Holding down: volume down + volume up + power)
+service bugreport /system/bin/bugmailer.sh -v
+    class main
+    disabled
+    oneshot
+    keycodes 114 115 107
