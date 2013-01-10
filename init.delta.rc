@@ -14,9 +14,11 @@ on post-fs
 on early-init
     export DOWNLOAD_CACHE /data/local/download
     export EXTERNAL_STORAGE /mnt/sdcard
-    mkdir /mnt/sdcard 0000 system system
+    mkdir /storage 0050 system sdcard_r
+    mkdir /storage/sdcard0 0000 system system
     # for backwards compatibility
-    symlink /mnt/sdcard /sdcard
+    symlink /storage/sdcard0 /sdcard
+    symlink /storage/sdcard0 /mnt/sdcard
     mkdir /sd-ext 0771 system system
     export SD_EXT_DIRECTORY /sd-ext
 
