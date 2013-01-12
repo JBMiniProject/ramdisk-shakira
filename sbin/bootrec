@@ -7,33 +7,36 @@ cpu_clock() {
 	echo 122880 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 }
 
-recovery_cmds() {
+umounts() {
 	mount -o remount,rw rootfs /
 	umount -l /system
 	umount -l /data
 	umount -l /cache
 	umount -l /mnt/sdcard
+	pkill bootlogo
+}
+
+dirs() {
 	rm -r /sdcard
 	rm -r /not/sdcard
 	mkdir /sdcard
 	mkdir /tmp
 	rm /etc
 	mkdir /etc
+}
+
+mounts() {
 	cp /recovery.fstab /etc/recovery.fstab
 	mount /dev/block/mmcblk0p1 /sdcard
 	rm -rf /tmp/*
-#	cp /sbin/aromafm /tmp/aromafm.zip
-	pkill bootlogo
 }
 
-recovery() {
-	rm /cache/recovery/boot
+cwm_rec() {
 	/sbin/recovery &
 	/sbin/adbd recovery 
 }
 
-twrp_recovery() {
-	pkill bootlogo
+twrp_rec() {
 	chroot /recovery /init
 }
 
@@ -62,19 +65,22 @@ kill -9 $!
 if [ -s /dev/keycheck -o -e /cache/recovery/boot ]
 	then
 		cpu_clock
-		recovery_cmds
-		recovery
-fi
-
+		rm /cache/recovery/boot
+		umounts
+		dirs
+		mounts
+		cwm_rec
+else
 if [ -s /dev/tscheck ]
 	then
 		cpu_clock
-		recovery_cmds
-		twrp_recovery
-fi
-
+		umounts
+		twrp_rec
+else
 mount -o remount,rw /system
 mkdir -p /system/lib/modules/
 copy_modules
 mount -o remount,ro /system
 cleanup
+fi
+fi
