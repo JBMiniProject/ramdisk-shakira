@@ -16,7 +16,6 @@ umounts() {
 	umount -l /data
 	umount -l /cache
 	umount -l /mnt/sdcard
-	pkill bootlogo
 }
 
 dirs() {

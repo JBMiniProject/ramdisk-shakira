@@ -1,6 +1,4 @@
 import init.delta.usb.rc
-on init
-    exec /sbin/nice -n -20 /sbin/bootlogo
 
 on early-boot
     #pre hw config
