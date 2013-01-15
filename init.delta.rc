@@ -30,6 +30,7 @@ on post-fs-data
     setprop vold.post_fs_data_done 1
     mkdir /data/local/download 0771 system cache
     mkdir /cache/download 0771 system cache
+    mkdir /cache/recovery 0771 system cache
 
 on fs
     # We don't support encryption on yaffs
