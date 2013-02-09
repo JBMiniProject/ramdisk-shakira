@@ -60,6 +60,8 @@ on boot
     chown system system /sys/class/power_supply/battery/disable_charging
     chown system system /sys/devices/platform/i2c-adapter/i2c-0/0-0036/br::suspend
     chown system system /sys/devices/platform/i2c-adapter/i2c-0/0-0036/mode
+    chown system system /sys/devices/i2c-0/0-0036/br::suspend
+    chown system system /sys/devices/i2c-0/0-0036/mode
     chown system system /sys/devices/platform/mddi_hitachi_qvga/power_ctrl
     chown system system /sys/devices/platform/mddi_samsung_qvga/power_ctrl
     chown system system /sys/devices/platform/mddi_toshiba_hvga/power_ctrl
@@ -89,6 +91,8 @@ on boot
     chmod 0777 /sys/devices/platform/i2c-adapter/i2c-0/0-0036/br::intensity
     chmod 0777 /sys/devices/platform/i2c-adapter/i2c-0/0-0036/mode
     chmod 0777 /sys/devices/platform/msm_pmic_misc_led.0/brightness
+    chmod 0777 /sys/devices/i2c-0/0-0036/br::intensity
+    chmod 0777 /sys/devices/i2c-0/0-0036/mode
 
 #needed for ril
     mkdir /data/radio 0777
@@ -107,6 +111,12 @@ on boot
 on property:init.svc.bluetoothd=running
     write /sys/devices/virtual/bluetooth/hci0/link_supervision_timeout 6400
     write /sys/devices/virtual/bluetooth/hci0/idle_timeout 7000
+
+service console_recovery /sbin/sh
+    class core
+    console
+    user root
+    group log
 
 service qmuxd /system/bin/qmuxd
     class main

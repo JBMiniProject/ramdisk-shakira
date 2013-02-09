@@ -2,8 +2,6 @@ echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 echo 90 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold
 echo 30 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/down_differential
 echo 500000 > /sys/devices/system/cpu/cpu0/cpufreq/ondemand/sampling_rate
-echo 122880 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-echo 600000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 0660 /dev/msm_pcm_dec
 chown audio.system /dev/msm_pcm_dec
 chmod 0660 /dev/snd/controlC0
