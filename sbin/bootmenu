@@ -57,7 +57,7 @@ cleanup() {
 
 sleep 2
 kill -9 $!
-if [ -s /dev/keycheck -o -e /cache/recovery/boot ]
+if [ -s /dev/keycheck -o -s /dev/tscheck -o -s /cache/recovery/boot ]
 then
 	cpu_clock
 	rm /cache/recovery/boot
