@@ -1,9 +1,6 @@
 #!/sbin/sh
 # Script for booting into recovery
 
-cat /dev/input/event2 > /dev/keycheck&
-cat /dev/input/event1 > /dev/tscheck&
-
 cpu_clock() {
 	echo "smartassV2" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 	echo 600000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
@@ -33,13 +30,9 @@ mounts() {
 	rm -rf /tmp/*
 }
 
-cwm_rec() {
-	/sbin/recovery &
-	/sbin/adbd recovery 
-}
-
-twrp_rec() {
-	chroot /recovery /init
+choose_rec() {
+	/sbin/recmenu &
+	/sbin/adbd recmenu
 }
 
 copy_modules() {
@@ -65,24 +58,16 @@ cleanup() {
 sleep 2
 kill -9 $!
 if [ -s /dev/keycheck -o -e /cache/recovery/boot ]
-	then
-		cpu_clock
-		rm /cache/recovery/boot
-		umounts
-		dirs
-		mounts
-		cwm_rec
+then
+	cpu_clock
+	rm /cache/recovery/boot
+	umounts
+	dirs
+	choose_rec
 else
-if [ -s /dev/tscheck ]
-	then
-		cpu_clock
-		umounts
-		twrp_rec
-else
-mount -o remount,rw /system
-mkdir -p /system/lib/modules/
-copy_modules
-mount -o remount,ro /system
-cleanup
-fi
+	mount -o remount,rw /system
+	mkdir -p /system/lib/modules/
+	copy_modules
+	mount -o remount,ro /system
+	cleanup
 fi

@@ -1,0 +1,20 @@
+#!/sbin/sh
+# Script for booting into JBMini Recovery
+killrecmenu.sh
+
+mount -o remount,rw rootfs /
+umount -l /system
+umount -l /data
+umount -l /cache
+umount -l /mnt/sdcard
+rm -r /sdcard
+rm -r /not/sdcard
+mkdir /sdcard
+mkdir /tmp
+rm /etc
+mkdir /etc
+cp /recovery.fstab /etc/recovery.fstab
+mount /dev/block/mmcblk0p1 /sdcard
+rm -rf /tmp/*
+/sbin/recovery &
+/sbin/adbd recovery

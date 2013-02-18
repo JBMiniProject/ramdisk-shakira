@@ -1,10 +1,12 @@
 import init.delta.usb.rc
+on init
+    exec /sbin/rec_input
 
 on early-boot
     #pre hw config
     exec /sbin/sh /pre_hw_config.sh
-    #boot into recovery
-    exec /sbin/bootrec
+    #boot into bootmenu
+    exec /sbin/bootmenu
 
 on post-fs
     exec /sbin/charger
